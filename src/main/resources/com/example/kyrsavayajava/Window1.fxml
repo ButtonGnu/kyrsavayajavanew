@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.kyrsavayajava.Window1">
+<AnchorPane prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/17-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.kyrsavayajava.Window1">
    <children>
       <TextField layoutX="39.0" layoutY="36.0" promptText="ФИО клиента" />
       <TextField layoutX="40.0" layoutY="92.0" promptText="Номер телефона" />
       <TextField layoutX="41.0" layoutY="153.0" promptText="Номер автомобиля" />
       <TextField layoutX="40.0" layoutY="225.0" promptText="Причина обращения" />
+      <Button fx:id="Button5" layoutX="249.0" layoutY="51.0" mnemonicParsing="false" onAction="#Open5" prefHeight="81.0" prefWidth="158.0" text="Назначить приемщика" />
+      <Button fx:id="Button6" layoutX="249.0" layoutY="153.0" mnemonicParsing="false" onAction="#Open6" prefHeight="81.0" prefWidth="157.0" text="Провести диагностику" />
    </children>
 </AnchorPane>

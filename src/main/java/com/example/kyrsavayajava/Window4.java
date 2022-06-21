@@ -6,13 +6,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class Window2 {
-    public void Open4(ActionEvent event){
+public class Window4 {
+
+    public void Open9(ActionEvent event){
 
         try{
-            Parent root = FXMLLoader.load(getClass().getResource("Window4.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("Window5.fxml"));
             Stage primaryStage = new Stage();
-            primaryStage.setTitle("Модерация заявки");
+            primaryStage.setTitle("Счет");
             primaryStage.setScene(new Scene(root, 500, 600));
             primaryStage.show();
 

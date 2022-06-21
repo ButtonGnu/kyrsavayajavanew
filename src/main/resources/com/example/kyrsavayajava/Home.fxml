@@ -3,11 +3,10 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.kyrsavayajava.Home">
+<AnchorPane prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/17-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.kyrsavayajava.Home">
    <children>
       <Button fx:id="Button2" layoutX="15.0" layoutY="140.0" mnemonicParsing="false" onAction="#Open2" prefHeight="120.0" prefWidth="202.0" text="Заявки" />
-      <Button fx:id="Button1" layoutX="15.0" layoutY="14.0" mnemonicParsing="false" onAction="#Open1" prefHeight="120.0" prefWidth="202.0" text="Новая заявка" />
       <Button fx:id="Button3" layoutX="15.0" layoutY="266.0" mnemonicParsing="false" onAction="#Open3" prefHeight="120.0" prefWidth="202.0" text="Выход" />
+      <Button fx:id="Button1" layoutX="15.0" layoutY="14.0" mnemonicParsing="false" onAction="#Open1" prefHeight="120.0" prefWidth="202.0" text="Новая заявка" />
    </children>
 </AnchorPane>
