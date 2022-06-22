@@ -48,7 +48,11 @@ public class RequestDaoImpl implements DAO<Request> {
                 }
                 PreparedStatement preparedStatementInsertRequest = conn.prepareStatement(INSERT_STATEMENT_REQUESTS, Statement.RETURN_GENERATED_KEYS);
                 preparedStatementInsertRequest.setString(1, request.getReason());
-                preparedStatementInsertRequest.setNull(2, Types.BIGINT);
+                if (request.getEmployeeId() == 0) {
+                    preparedStatementInsertRequest.setNull(2, Types.BIGINT);
+                } else {
+                    preparedStatementInsertRequest.setLong(2, request.getEmployeeId());
+                }
                 preparedStatementInsertRequest.setString(3, request.getExecutionStage().getDisplayName());
                 preparedStatementInsertRequest.setString(4, request.getRequestStatus().getDisplayName());
                 preparedStatementInsertRequest.setLong(5, customerId);
