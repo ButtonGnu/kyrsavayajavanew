@@ -7,7 +7,7 @@ import java.io.InputStream;
 public class JsonReader {
 
     public Damage[] readJson(String fileName) {
-        try (InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(fileName)) {
+        try (InputStream resourceAsStream = JsonReader.class.getResourceAsStream("/" + fileName)) {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(resourceAsStream, Damage[].class);
         } catch (Exception e) {
