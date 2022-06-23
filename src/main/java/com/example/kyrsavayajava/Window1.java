@@ -14,7 +14,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -66,22 +65,13 @@ public class Window1 implements Initializable {
 
 
     public void setMasterToRequest(ActionEvent event) {
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-//        EmployeeDAOImpl   employeeDAO  = new EmployeeDAOImpl();
-        List<Employee> employeeList = employeeDAO.findByJobPosition(JobPosition.MASTER);
+        ThreadLocalRandom random       = ThreadLocalRandom.current();
+        List<Employee>    employeeList = employeeDAO.findByJobPosition(JobPosition.MASTER);
         selectedEmployee = employeeList.get(random.nextInt(0, employeeList.size()));
         Request selectedRequest = tableRequests.getSelectionModel().getSelectedItem();
         selectedRequest.setEmployeeId(selectedEmployee.getId());
         requestDao.update(selectedRequest);
         startDiagnosticsButton.setDisable(false);
-
-        try {
-
-        } catch (Exception ex) {
-
-        }
-
-
     }
 
     public void startDiagnostics(ActionEvent event) {
@@ -121,7 +111,6 @@ public class Window1 implements Initializable {
 
     private void reloadTable() {
         tableData.clear();
-//        RequestDaoImpl requestDao  = new RequestDaoImpl();
         List<Request> requestList = requestDao.findAll();
         tableData.addAll(requestList);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -151,7 +140,6 @@ public class Window1 implements Initializable {
     }
 
     public void createRequest(ActionEvent actionEvent) {
-//        RequestDaoImpl requestDao = new RequestDaoImpl();
         Request request = new Request();
         request.setRequestStatus(RequestStatus.NEW_REQUEST);
         request.setExecutionStage(ExecutionStage.NEW_REQUEST);
@@ -163,10 +151,6 @@ public class Window1 implements Initializable {
         request.setLicensePlate(this.plateNr.getText());
         requestDao.create(request);
         reloadTable();
-    }
-
-    public void requestSelected(MouseEvent mouseEvent) {
-
     }
 }
 
