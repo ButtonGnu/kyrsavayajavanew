@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/17-ea"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.kyrsavayajava.CreateRequest">
+    <children>
+        <TextField fx:id="name" layoutX="20.0" layoutY="20.0" promptText="ФИО клиента"/>
+        <TextField fx:id="phone" layoutX="250.0" layoutY="20.0" promptText="Номер телефона"/>
+        <TextField fx:id="plateNr" layoutX="500.0" layoutY="20.0" promptText="Номер автомобиля"/>
+        <TextField fx:id="reason" layoutX="20.0" layoutY="70.0" prefWidth="900.0"/>
+        <Button fx:id="Button7" layoutX="20.0" layoutY="110.0" mnemonicParsing="false" onAction="#createRequest"
+                prefHeight="45.0" prefWidth="158.0" text="Создать заявку"/>
+        <TableView fx:id="tableRequests" layoutX="20.0" layoutY="170.0" prefHeight="308.0" prefWidth="1030.0">
+            <columns>
+                <TableColumn fx:id="idColumn" prefWidth="40.0" text="№"/>
+                <TableColumn fx:id="firstNameColumn" minWidth="6.0" prefWidth="100.0" text="Имя заказчика"/>
+                <TableColumn fx:id="lastNameColumn" prefWidth="160.0" text="Фамилия заказчика"/>
+                <TableColumn fx:id="phoneColumn" minWidth="2.0" text="Телефон"/>
+                <TableColumn fx:id="licensePlateColumn" minWidth="2.0" prefWidth="90.0" text="Рег. номер"/>
+                <TableColumn fx:id="reasonColumn" minWidth="7.0" prefWidth="200.0" text="Причина обращения"/>
+                <TableColumn fx:id="requestStatusColumn" prefWidth="120.0" text="Статус заявки"/>
+                <TableColumn fx:id="executionStageColumn" prefWidth="120.0" text="Статус выполнения"/>
+                <TableColumn fx:id="priceColumn" prefWidth="75.0" text="Стоимость"/>
+            </columns>
+        </TableView>
+    </children>
+</AnchorPane>

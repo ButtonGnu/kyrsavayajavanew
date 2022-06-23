@@ -1,20 +1,12 @@
 package com.example.kyrsavayajava;
 
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,7 +15,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-public class Window1 implements Initializable {
+public class CreateRequest implements Initializable {
     @FXML
     public TextField                    name    = new TextField();
     @FXML
@@ -59,35 +51,40 @@ public class Window1 implements Initializable {
     @FXML
     TableView<Request>      tableRequests = new TableView<>(tableData);
 
-    private Employee        selectedEmployee;
     private RequestDaoImpl  requestDao;
     private EmployeeDAOImpl employeeDAO;
 
 
-    public void setMasterToRequest(ActionEvent event) {
-        ThreadLocalRandom random       = ThreadLocalRandom.current();
-        List<Employee>    employeeList = employeeDAO.findByJobPosition(JobPosition.MASTER);
-        selectedEmployee = employeeList.get(random.nextInt(0, employeeList.size()));
-        Request selectedRequest = tableRequests.getSelectionModel().getSelectedItem();
-        selectedRequest.setEmployeeId(selectedEmployee.getId());
-        requestDao.update(selectedRequest);
-        startDiagnosticsButton.setDisable(false);
-    }
 
-    public void startDiagnostics(ActionEvent event) {
+
+    @FXML
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            Parent root         = FXMLLoader.load(getClass().getResource("Window3.fxml"));
-            Stage  primaryStage = new Stage();
-            primaryStage.setTitle("Новая заявка");
-            primaryStage.setScene(new Scene(root, 500, 500));
-            primaryStage.show();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            requestDao = new RequestDaoImpl();
+            employeeDAO = new EmployeeDAOImpl();
+            reloadTable();
+            String requestReason = generateRequestReason();
+            this.reason.setText(requestReason);
+//            setMasterButton.disableProperty().bind(Bindings.isEmpty(tableRequests.getSelectionModel().getSelectedItems()));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-
     }
+
+    public void createRequest(ActionEvent actionEvent) {
+        Request request = new Request();
+        request.setRequestStatus(RequestStatus.NEW_REQUEST);
+        request.setExecutionStage(ExecutionStage.NEW_REQUEST);
+        request.setReason(this.reason.getText());
+        String[] name = this.name.getText().split(" ");
+        request.setCustomerFirstName(name[0]);
+        request.setCustomerLastName(name[1]);
+        request.setCustomerPhone(this.phone.getText());
+        request.setLicensePlate(this.plateNr.getText());
+        requestDao.create(request);
+        reloadTable();
+    }
+
 
     private String generateRequestReason() {
         DamageGenerator dg              = new DamageGenerator();
@@ -123,34 +120,6 @@ public class Window1 implements Initializable {
         executionStageColumn.setCellValueFactory(new PropertyValueFactory<>("executionStage"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         tableRequests.setItems(tableData);
-    }
-
-    @FXML
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        try {
-            requestDao = new RequestDaoImpl();
-            employeeDAO = new EmployeeDAOImpl();
-            reloadTable();
-            String requestReason = generateRequestReason();
-            this.reason.setText(requestReason);
-            setMasterButton.disableProperty().bind(Bindings.isEmpty(tableRequests.getSelectionModel().getSelectedItems()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void createRequest(ActionEvent actionEvent) {
-        Request request = new Request();
-        request.setRequestStatus(RequestStatus.NEW_REQUEST);
-        request.setExecutionStage(ExecutionStage.NEW_REQUEST);
-        request.setReason(this.reason.getText());
-        String[] name = this.name.getText().split(" ");
-        request.setCustomerFirstName(name[0]);
-        request.setCustomerLastName(name[1]);
-        request.setCustomerPhone(this.phone.getText());
-        request.setLicensePlate(this.plateNr.getText());
-        requestDao.create(request);
-        reloadTable();
     }
 }
 
