@@ -1,5 +1,6 @@
 package com.example.kyrsavayajava;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -8,10 +9,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -23,15 +26,15 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Window1 implements Initializable {
     @FXML
-    public  TextField name    = new TextField();
+    public TextField                    name    = new TextField();
     @FXML
-    public  TextField phone   = new TextField();
+    public TextField                    phone   = new TextField();
     @FXML
-    public  TextField plateNr = new TextField();
+    public TextField                    plateNr = new TextField();
     @FXML
-    public  TextField reason  = new TextField();
+    public TextField                    reason  = new TextField();
     @FXML
-    public TableColumn<Request, Long> idColumn;
+    public TableColumn<Request, Long>   idColumn;
     @FXML
     public TableColumn<Request, String> firstNameColumn;
     @FXML
@@ -47,20 +50,31 @@ public class Window1 implements Initializable {
     @FXML
     public TableColumn<Request, String> executionStageColumn;
     @FXML
-    public TableColumn<Request, Long> priceColumn;
+    public TableColumn<Request, Long>   priceColumn;
+    @FXML
+    public Button                       setMasterButton;
+    @FXML
+    public Button                       startDiagnosticsButton;
     @FXML
     ObservableList<Request> tableData     = FXCollections.observableArrayList();
     @FXML
     TableView<Request>      tableRequests = new TableView<>(tableData);
 
-    private Employee  selectedEmployee;
+    private Employee        selectedEmployee;
+    private RequestDaoImpl  requestDao;
+    private EmployeeDAOImpl employeeDAO;
+
 
     public void setMasterToRequest(ActionEvent event) {
-        ThreadLocalRandom random       = ThreadLocalRandom.current();
-        EmployeeDAOImpl   employeeDAO  = new EmployeeDAOImpl();
-        List<Employee>    employeeList = employeeDAO.findByJobPosition(JobPosition.MASTER);
-        Employee          employee     = employeeList.get(random.nextInt(0, employeeList.size()));
-        selectedEmployee = employee;
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+//        EmployeeDAOImpl   employeeDAO  = new EmployeeDAOImpl();
+        List<Employee> employeeList = employeeDAO.findByJobPosition(JobPosition.MASTER);
+        selectedEmployee = employeeList.get(random.nextInt(0, employeeList.size()));
+        Request selectedRequest = tableRequests.getSelectionModel().getSelectedItem();
+        selectedRequest.setEmployeeId(selectedEmployee.getId());
+        requestDao.update(selectedRequest);
+        startDiagnosticsButton.setDisable(false);
+
         try {
 
         } catch (Exception ex) {
@@ -79,7 +93,7 @@ public class Window1 implements Initializable {
             primaryStage.show();
 
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
 
 
@@ -107,8 +121,8 @@ public class Window1 implements Initializable {
 
     private void reloadTable() {
         tableData.clear();
-        RequestDaoImpl requestDao  = new RequestDaoImpl();
-        List<Request>  requestList = requestDao.findAll();
+//        RequestDaoImpl requestDao  = new RequestDaoImpl();
+        List<Request> requestList = requestDao.findAll();
         tableData.addAll(requestList);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerFirstName"));
@@ -125,17 +139,20 @@ public class Window1 implements Initializable {
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
+            requestDao = new RequestDaoImpl();
+            employeeDAO = new EmployeeDAOImpl();
             reloadTable();
             String requestReason = generateRequestReason();
             this.reason.setText(requestReason);
+            setMasterButton.disableProperty().bind(Bindings.isEmpty(tableRequests.getSelectionModel().getSelectedItems()));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void createRequest(ActionEvent actionEvent) {
-        RequestDaoImpl requestDao = new RequestDaoImpl();
-        Request        request    = new Request();
+//        RequestDaoImpl requestDao = new RequestDaoImpl();
+        Request request = new Request();
         request.setRequestStatus(RequestStatus.NEW_REQUEST);
         request.setExecutionStage(ExecutionStage.NEW_REQUEST);
         request.setReason(this.reason.getText());
@@ -144,8 +161,12 @@ public class Window1 implements Initializable {
         request.setCustomerLastName(name[1]);
         request.setCustomerPhone(this.phone.getText());
         request.setLicensePlate(this.plateNr.getText());
-        request.setEmployeeId(selectedEmployee.getId());
         requestDao.create(request);
+        reloadTable();
+    }
+
+    public void requestSelected(MouseEvent mouseEvent) {
+
     }
 }
 
