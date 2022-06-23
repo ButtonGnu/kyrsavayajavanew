@@ -14,6 +14,10 @@ public enum JobPosition {
         this.displayName = displayName;
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
     public static JobPosition retrieveByDisplayedName(String displayName) {
         switch (displayName) {
             case "мастер-приемщик":

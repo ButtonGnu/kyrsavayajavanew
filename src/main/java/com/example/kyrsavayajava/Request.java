@@ -7,16 +7,13 @@ public class Request {
     private String customerFirstName;
     private String customerLastName;
     private String customerPhone;
-
     private long employeeId;
-
     private ExecutionStage executionStage;
-
     private RequestStatus requestStatus;
-
     private long customerId;
-
     private String reason;
+    private String licensePlate;
+    private long price;
 
     public long getId() {
         return id;
@@ -88,5 +85,21 @@ public class Request {
 
     public void setCustomerPhone(String customerPhone) {
         this.customerPhone = customerPhone;
+    }
+
+    public String getLicensePlate() {
+        return licensePlate;
+    }
+
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
+    }
+
+    public long getPrice() {
+        return price;
+    }
+
+    public void setPrice(long price) {
+        this.price = price;
     }
 }
