@@ -3,6 +3,8 @@ package com.example.kyrsavayajava;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 
 import java.net.URL;
@@ -31,6 +33,8 @@ public class EditJob implements Initializable {
         currentRequest.setEmployeeId(selectedEmployee.getId());
         currentRequest.setExecutionStage(ExecutionStage.REPAIR);
         requestDao.update(currentRequest);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Назначен " + selectedEmployee.getJobPosition().getDisplayName() + ":\n"+ selectedEmployee.getFirstName() + "  "+ selectedEmployee.getLastName(), ButtonType.OK);
+        alert.showAndWait();
     }
 
     public void setRequest(Request request) {

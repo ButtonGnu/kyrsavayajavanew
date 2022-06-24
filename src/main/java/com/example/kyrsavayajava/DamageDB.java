@@ -1,5 +1,10 @@
 package com.example.kyrsavayajava;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class DamageDB {
     private String category;
     private String subCategory;
@@ -37,6 +42,9 @@ public class DamageDB {
 
     @Override
     public String toString() {
-        return category + ":" + subCategory + ":" + subCategoryType;
+        List<String> strings = Arrays.asList(category, subCategory, subCategoryType);
+        return Stream.of(category, subCategory, subCategoryType)
+                .filter(s -> s != null && !s.isEmpty())
+                .collect(Collectors.joining(":"));
     }
 }

@@ -43,6 +43,8 @@ public class EditDiagnostics implements Initializable {
         Employee          selectedEmployee = employeeList.get(random.nextInt(0, employeeList.size()));
         currentRequest.setEmployeeId(selectedEmployee.getId());
         requestDao.update(currentRequest);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Назначен мастер-приемщик.\n"+ selectedEmployee.getFirstName() + "  "+ selectedEmployee.getLastName(), ButtonType.OK);
+        alert.showAndWait();
     }
 
     public void startDiagnostics(ActionEvent event) {
@@ -50,6 +52,8 @@ public class EditDiagnostics implements Initializable {
             currentRequest.setRequestStatus(RequestStatus.DIAGNOSTICS);
             currentRequest.setExecutionStage(ExecutionStage.DIAGNOSTICS);
             requestDao.update(currentRequest);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Диагностика проведена", ButtonType.OK);
+            alert.showAndWait();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Невозможно начать диагностику! Не выбран мастер-приемщик.", ButtonType.OK);
             alert.showAndWait();
