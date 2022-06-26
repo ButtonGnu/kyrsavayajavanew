@@ -12,17 +12,29 @@ CREATE TABLE if not exists public.employees (
    job_position VARCHAR(255),
    CONSTRAINT pk_employees PRIMARY KEY (id)
 );
-
-CREATE TABLE if not exists public.requests (
-  id BIGINT NOT NULL generated always as identity,
-  reason VARCHAR,
-   employee_id BIGINT,
-   execution_stage VARCHAR(255),
-   request_status VARCHAR(255),
-   customer_id BIGINT NOT NULL,
-   CONSTRAINT pk_requests PRIMARY KEY (id)
+CREATE TABLE public.items_price
+(
+    id bigint NOT NULL generated always as identity,
+    item text,
+    price bigint,
+    PRIMARY KEY (id)
 );
-
-ALTER TABLE public.requests ADD CONSTRAINT FK_REQUESTS_ON_CUSTOMER FOREIGN KEY (customer_id) REFERENCES customers (id);
-
-ALTER TABLE public.requests ADD CONSTRAINT FK_REQUESTS_ON_EMPLOYEE FOREIGN KEY (employee_id) REFERENCES employees (id);
+CREATE TABLE public.requests
+(
+    id bigint NOT NULL generated always as identity,
+    reason text,
+    execution_stage character varying,
+    request_status character varying,
+	license_plate character varying,
+    employee_diagnostics bigint,
+    employee_repair bigint,
+    price bigint,
+    customer_id bigint,
+    PRIMARY KEY (id),
+    CONSTRAINT employee_diagnostics FOREIGN KEY (employee_diagnostics)
+        REFERENCES public.employees (id) ,
+    CONSTRAINT employee_repair FOREIGN KEY (employee_repair)
+        REFERENCES public.employees (id) ,
+    CONSTRAINT customer_id FOREIGN KEY (customer_id)
+        REFERENCES public.customers (id)
+);
