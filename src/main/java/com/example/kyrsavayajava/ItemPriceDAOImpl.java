@@ -1,14 +1,24 @@
 package com.example.kyrsavayajava;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemPriceDAOImpl implements DAO<ItemPrice>{
-    private static final String FIND_ALL_ITEMS = "SELECT * FROM public.prices;";
+public class ItemPriceDAOImpl implements DAO<ItemPrice> {
+    String     dbURL = "jdbc:postgresql://localhost:5432/postgres";
+    String     user  = "postgres";
+    String     pass  = "Shery1511Noya";
+    Connection conn;
+    private static final String FIND_ALL_ITEMS     = "SELECT * FROM public.prices;";
+    private static final String FIND_PRICE_BY_ITEM = "SELECT price FROM public.items_price where item=?;";
+
+    public ItemPriceDAOImpl() {
+        try {
+            conn = DriverManager.getConnection(dbURL, user, pass);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void create(ItemPrice entity) {
@@ -28,7 +38,7 @@ public class ItemPriceDAOImpl implements DAO<ItemPrice>{
     @Override
     public List<ItemPrice> findAll() {
         Connection connection = buildConnection();
-        if(connection!=null){
+        if (connection != null) {
             List<ItemPrice> itemPrices = new ArrayList<>();
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_ITEMS);
@@ -46,5 +56,19 @@ public class ItemPriceDAOImpl implements DAO<ItemPrice>{
             return itemPrices;
         }
         return null;
+    }
+
+    public Long findPriceByItem(String item) {
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(FIND_PRICE_BY_ITEM);
+            preparedStatement.setString(1, item);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getLong("price");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0L;
     }
 }

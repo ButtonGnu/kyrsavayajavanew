@@ -10,7 +10,7 @@ public class EmployeeDAOImpl implements DAO<Employee> {
     String     user  = "postgres";
     String     pass  = "Shery1511Noya";
     Connection conn;
-    private final String FIND_BY_ID_STATEMENT = "select * from public.employees;";
+    private final String FIND_BY_ID_STATEMENT = "select * from public.employees WHERE id=?;";
     private final String FIND_BY_JOB_POSITION_STATEMENT = "SELECT * FROM public.employees where job_position =?;";
     private final String FIND_ALL_REQUESTS    = "select * from public.employees;";
 

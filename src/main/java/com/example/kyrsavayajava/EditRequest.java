@@ -47,10 +47,11 @@ public class EditRequest implements Initializable {
     TableView<Request>      tableRequests = new TableView<>(tableData);
 
     private RequestDaoImpl  requestDao;
+    private EmployeeDAOImpl employeeDAO;
 
     public void editRequest(ActionEvent event) throws IOException {
         Request request = tableRequests.getSelectionModel().getSelectedItems().get(0);
-        switch (request.getRequestStatus()){
+        switch (request.getRequestStatus()) {
             case NEW_REQUEST:
                 editNewRequest(request);
                 break;
@@ -64,38 +65,51 @@ public class EditRequest implements Initializable {
     }
 
     private void editDone(Request request) throws IOException {
-        Parent root         = FXMLLoader.load(getClass().getResource("EditCompleted.fxml"));
-        Stage  primaryStage = new Stage();
+        FXMLLoader    loader          = new FXMLLoader(getClass().getResource("EditCompleted.fxml"));
+        Parent        root            = loader.load();
+        EditCompleted alertController = loader.getController();
+        alertController.setRequest(request);
+
+        Employee employeeDiagnostics = employeeDAO.findById(request.getEmployeeDiagnostics());
+        Employee employeeRepair      = employeeDAO.findById(request.getEmployeeRepair());
+        alertController.labelEmployeeDiagnostics.setText("Диагностику выполнил мастер-приемщик " + employeeDiagnostics.getFirstName() + " " + employeeDiagnostics.getLastName());
+        alertController.labelEmployeeRep.setText("Ремонт выполнил " + employeeRepair.getJobPosition().getDisplayName() + " " + employeeRepair.getFirstName() + " " + employeeRepair.getLastName());
+        alertController.labelPrice.setText("Итоговая стоимость: " + request.getPrice());
+        alertController.labelName.setText("Клиент: " + request.getCustomerFirstName() + " " + request.getCustomerLastName());
+        alertController.labelPhone.setText("Телефон: " + request.getCustomerPhone());
+        alertController.labelReason.setText("Причина обращения: " + request.getReason());
+        alertController.labelStatus.setText("Статус заявки: " + request.getRequestStatus().getDisplayName());
+        Stage primaryStage = new Stage();
         primaryStage.setTitle("Модерация заявки");
         primaryStage.setScene(new Scene(root, 500, 600));
         primaryStage.show();
     }
 
     private void editDiagnostics(Request request) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("EditJob.fxml"));
-        Parent  root            = loader.load();
-        EditJob alertController = loader.getController();
+        FXMLLoader loader          = new FXMLLoader(getClass().getResource("EditJob.fxml"));
+        Parent     root            = loader.load();
+        EditJob    alertController = loader.getController();
         alertController.setRequest(request);
-        alertController.labelName.setText("Клиент: " + request.getCustomerFirstName() + " "+ request.getCustomerLastName());
+        alertController.labelName.setText("Клиент: " + request.getCustomerFirstName() + " " + request.getCustomerLastName());
         alertController.labelPhone.setText("Телефон: " + request.getCustomerPhone());
-        alertController.labelReason.setText("Причина обращения: "+ request.getReason());
+        alertController.labelReason.setText("Причина обращения: " + request.getReason());
         alertController.labelStatus.setText("Статус заявки: " + request.getRequestStatus().getDisplayName());
-        Stage  primaryStage = new Stage();
+        Stage primaryStage = new Stage();
         primaryStage.setTitle("Модерация заявки");
         primaryStage.setScene(new Scene(root, 500, 600));
         primaryStage.show();
     }
 
     private void editNewRequest(Request request) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("EditDiagnostics.fxml"));
-        Parent  root            = loader.load();
+        FXMLLoader      loader          = new FXMLLoader(getClass().getResource("EditDiagnostics.fxml"));
+        Parent          root            = loader.load();
         EditDiagnostics alertController = loader.getController();
         alertController.setRequest(request);
-        alertController.labelName.setText("Клиент: " + request.getCustomerFirstName() + " "+ request.getCustomerLastName());
+        alertController.labelName.setText("Клиент: " + request.getCustomerFirstName() + " " + request.getCustomerLastName());
         alertController.labelPhone.setText("Телефон: " + request.getCustomerPhone());
-        alertController.labelReason.setText("Причина обращения: "+ request.getReason());
+        alertController.labelReason.setText("Причина обращения: " + request.getReason());
         alertController.labelStatus.setText("Статус заявки: " + request.getRequestStatus().getDisplayName());
-        Stage  primaryStage = new Stage();
+        Stage primaryStage = new Stage();
         primaryStage.setTitle("Модерация заявки");
         primaryStage.setScene(new Scene(root, 500, 600));
         primaryStage.show();
@@ -121,6 +135,7 @@ public class EditRequest implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             requestDao = new RequestDaoImpl();
+            employeeDAO = new EmployeeDAOImpl();
             reloadTable();
             editRequestButton.disableProperty().bind(Bindings.isEmpty(tableRequests.getSelectionModel().getSelectedItems()));
         } catch (Exception e) {

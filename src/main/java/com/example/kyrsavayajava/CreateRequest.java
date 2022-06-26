@@ -65,7 +65,6 @@ public class CreateRequest implements Initializable {
             reloadTable();
             String requestReason = generateRequestReason();
             this.reason.setText(requestReason);
-//            setMasterButton.disableProperty().bind(Bindings.isEmpty(tableRequests.getSelectionModel().getSelectedItems()));
         } catch (Exception e) {
             e.printStackTrace();
         }

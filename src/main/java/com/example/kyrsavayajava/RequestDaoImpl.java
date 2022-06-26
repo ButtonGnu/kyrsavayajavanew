@@ -13,8 +13,8 @@ public class RequestDaoImpl implements DAO<Request> {
     Connection conn;
     private final String INSERT_STATEMENT_CUSTOMER     = "INSERT INTO public.customers(first_name, last_name, phone_number) VALUES (?, ?, ?);";
     private final String DELETE_STATEMENT_CUSTOMER     = "DELETE FROM public.customers WHERE id=?;";
-    private final String INSERT_STATEMENT_REQUESTS     = "INSERT INTO public.requests(reason, employee_id, execution_stage, request_status, customer_id) VALUES (?, ?, ?, ?, ?);";
-    private final String UPDATE_STATEMENT_REQUESTS     = "UPDATE public.requests SET employee_id=?, execution_stage=?, request_status=?, price=? WHERE id=?;";
+    private final String INSERT_STATEMENT_REQUESTS     = "INSERT INTO public.requests(reason, employee_diagnostics, employee_repair,execution_stage, request_status, customer_id) VALUES (?, ?, ?, ?, ?, ?);";
+    private final String UPDATE_STATEMENT_REQUESTS     = "UPDATE public.requests SET employee_diagnostics=?, employee_repair=?, execution_stage=?, request_status=?, price=? WHERE id=?;";
     private final String FIND_BY_ID_STATEMENT_REQUESTS = "select * from public.requests r inner join public.customers cus on r.id=cus.id where r.id=?;";
     private final String FIND_ALL_REQUESTS             = "select * from public.requests r left join public.customers cus on r.id=cus.id;";
 
@@ -48,14 +48,19 @@ public class RequestDaoImpl implements DAO<Request> {
                 }
                 PreparedStatement preparedStatementInsertRequest = conn.prepareStatement(INSERT_STATEMENT_REQUESTS, Statement.RETURN_GENERATED_KEYS);
                 preparedStatementInsertRequest.setString(1, request.getReason());
-                if (request.getEmployeeId() == 0) {
+                if (request.getEmployeeRepair() == 0) {
+                    preparedStatementInsertRequest.setNull(3, Types.BIGINT);
+                } else {
+                    preparedStatementInsertRequest.setLong(3, request.getEmployeeRepair());
+                }
+                if (request.getEmployeeDiagnostics() == 0) {
                     preparedStatementInsertRequest.setNull(2, Types.BIGINT);
                 } else {
-                    preparedStatementInsertRequest.setLong(2, request.getEmployeeId());
+                    preparedStatementInsertRequest.setLong(2, request.getEmployeeDiagnostics());
                 }
-                preparedStatementInsertRequest.setString(3, request.getExecutionStage().getDisplayName());
-                preparedStatementInsertRequest.setString(4, request.getRequestStatus().getDisplayName());
-                preparedStatementInsertRequest.setLong(5, customerId);
+                preparedStatementInsertRequest.setString(4, request.getExecutionStage().getDisplayName());
+                preparedStatementInsertRequest.setString(5, request.getRequestStatus().getDisplayName());
+                preparedStatementInsertRequest.setLong(6, customerId);
 
                 preparedStatementInsertRequest.executeUpdate();
 
@@ -74,11 +79,20 @@ public class RequestDaoImpl implements DAO<Request> {
     public void update(Request request) {
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_STATEMENT_REQUESTS);
-            preparedStatement.setLong(1, request.getEmployeeId());
-            preparedStatement.setString(2, request.getExecutionStage().getDisplayName());
-            preparedStatement.setString(3, request.getRequestStatus().getDisplayName());
-            preparedStatement.setLong(4, request.getPrice());
-            preparedStatement.setLong(5, request.getId());
+            if (request.getEmployeeDiagnostics() == 0) {
+                preparedStatement.setNull(1, Types.BIGINT);
+            } else {
+                preparedStatement.setLong(1, request.getEmployeeDiagnostics());
+            }
+            if (request.getEmployeeRepair() == 0) {
+                preparedStatement.setNull(2, Types.BIGINT);
+            } else {
+                preparedStatement.setLong(2, request.getEmployeeRepair());
+            }
+            preparedStatement.setString(3, request.getExecutionStage().getDisplayName());
+            preparedStatement.setString(4, request.getRequestStatus().getDisplayName());
+            preparedStatement.setLong(5, request.getPrice());
+            preparedStatement.setLong(6, request.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -103,7 +117,7 @@ public class RequestDaoImpl implements DAO<Request> {
                 request.setCustomerPhone(resultSet.getString("phone_number"));
                 request.setCustomerLastName(resultSet.getString("last_name"));
                 request.setCustomerFirstName(resultSet.getString("first_name"));
-                request.setEmployeeId(resultSet.getLong("employee_id"));
+                request.setEmployeeRepair(resultSet.getLong("employee_id"));
                 request.setLicensePlate(resultSet.getString("license_plate"));
                 request.setPrice(resultSet.getLong("price"));
             }
@@ -129,7 +143,8 @@ public class RequestDaoImpl implements DAO<Request> {
                 request.setCustomerPhone(resultSet.getString("phone_number"));
                 request.setCustomerLastName(resultSet.getString("last_name"));
                 request.setCustomerFirstName(resultSet.getString("first_name"));
-                request.setEmployeeId(resultSet.getLong("employee_id"));
+                request.setEmployeeRepair(resultSet.getLong("employee_repair"));
+                request.setEmployeeDiagnostics(resultSet.getLong("employee_diagnostics"));
                 request.setLicensePlate(resultSet.getString("license_plate"));
                 request.setPrice(resultSet.getLong("price"));
                 requests.add(request);

@@ -6,8 +6,9 @@ public class Request {
 
     private String customerFirstName;
     private String customerLastName;
-    private String customerPhone;
-    private long employeeId;
+    private String         customerPhone;
+    private long           employeeRepair;
+    private long           employeeDiagnostics;
     private ExecutionStage executionStage;
     private RequestStatus requestStatus;
     private long customerId;
@@ -23,12 +24,12 @@ public class Request {
         this.id = id;
     }
 
-    public long getEmployeeId() {
-        return employeeId;
+    public long getEmployeeRepair() {
+        return employeeRepair;
     }
 
-    public void setEmployeeId(long employeeId) {
-        this.employeeId = employeeId;
+    public void setEmployeeRepair(long employeeRepair) {
+        this.employeeRepair = employeeRepair;
     }
 
     public ExecutionStage getExecutionStage() {
@@ -101,5 +102,13 @@ public class Request {
 
     public void setPrice(long price) {
         this.price = price;
+    }
+
+    public long getEmployeeDiagnostics() {
+        return employeeDiagnostics;
+    }
+
+    public void setEmployeeDiagnostics(long employeeDiagnostics) {
+        this.employeeDiagnostics = employeeDiagnostics;
     }
 }

@@ -9,7 +9,6 @@ public class DamageGenerator {
 
     public DamageGenerator() {
         this.random = ThreadLocalRandom.current();
-        ;
     }
 
     public Damage generateDamage(Damage[] damages) {

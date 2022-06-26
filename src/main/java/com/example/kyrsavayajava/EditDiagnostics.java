@@ -27,6 +27,8 @@ public class EditDiagnostics implements Initializable {
     private EmployeeDAOImpl employeeDAO;
     private Request         currentRequest;
 
+    private ThreadLocalRandom random = ThreadLocalRandom.current();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         requestDao = new RequestDaoImpl();
@@ -38,21 +40,22 @@ public class EditDiagnostics implements Initializable {
     }
 
     public void setMasterToRequest(ActionEvent event) {
-        ThreadLocalRandom random           = ThreadLocalRandom.current();
-        List<Employee>    employeeList     = employeeDAO.findByJobPosition(JobPosition.MASTER);
-        Employee          selectedEmployee = employeeList.get(random.nextInt(0, employeeList.size()));
-        currentRequest.setEmployeeId(selectedEmployee.getId());
+        List<Employee> employeeList     = employeeDAO.findByJobPosition(JobPosition.MASTER);
+        Employee       selectedEmployee = employeeList.get(random.nextInt(0, employeeList.size()));
+        currentRequest.setEmployeeDiagnostics(selectedEmployee.getId());
         requestDao.update(currentRequest);
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Назначен мастер-приемщик.\n"+ selectedEmployee.getFirstName() + "  "+ selectedEmployee.getLastName(), ButtonType.OK);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Назначен мастер-приемщик.\n" + selectedEmployee.getFirstName() + "  " + selectedEmployee.getLastName(), ButtonType.OK);
         alert.showAndWait();
     }
 
     public void startDiagnostics(ActionEvent event) {
-        if (currentRequest.getEmployeeId() != 0) {
+        if (currentRequest.getEmployeeDiagnostics() != 0) {
             currentRequest.setRequestStatus(RequestStatus.DIAGNOSTICS);
             currentRequest.setExecutionStage(ExecutionStage.DIAGNOSTICS);
+            long priceDiagnostics = random.nextLong(1000, 5000);
+            currentRequest.setPrice(priceDiagnostics);
             requestDao.update(currentRequest);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Диагностика проведена", ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Диагностика проведена.\nСтоимость диагностики " + priceDiagnostics, ButtonType.OK);
             alert.showAndWait();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Невозможно начать диагностику! Не выбран мастер-приемщик.", ButtonType.OK);
