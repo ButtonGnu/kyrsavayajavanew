@@ -7,9 +7,9 @@ import java.util.List;
 
 public class RequestDaoImpl implements DAO<Request> {
 
-    String     dbURL = "jdbc:postgresql://localhost:5432/postgres";
+    String     dbURL = "jdbc:postgresql://localhost:5432/SPARES3";
     String     user  = "postgres";
-    String     pass  = "Shery1511Noya";
+    String     pass  = "2001Eliz!!";
     Connection conn;
     private final String INSERT_STATEMENT_CUSTOMER     = "INSERT INTO public.customers(first_name, last_name, phone_number) VALUES (?, ?, ?);";
     private final String DELETE_STATEMENT_CUSTOMER     = "DELETE FROM public.customers WHERE id=?;";

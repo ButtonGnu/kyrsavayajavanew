@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface DAO<T> {
 
-    String     dbURL = "jdbc:postgresql://localhost:5432/postgres";
+    String     dbURL = "jdbc:postgresql://localhost:5432/SPARES3";
     String     user  = "postgres";
-    String     pass  = "Shery1511Noya";
+    String     pass  = "2001Eliz!!";
     default Connection buildConnection(){
         try {
             return DriverManager.getConnection(dbURL, user, pass);

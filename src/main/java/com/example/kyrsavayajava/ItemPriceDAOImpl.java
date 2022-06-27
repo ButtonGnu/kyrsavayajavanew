@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemPriceDAOImpl implements DAO<ItemPrice> {
-    String     dbURL = "jdbc:postgresql://localhost:5432/postgres";
+    String     dbURL = "jdbc:postgresql://localhost:5432/SPARES3";
     String     user  = "postgres";
-    String     pass  = "Shery1511Noya";
+    String     pass  = "2001Eliz!!";
     Connection conn;
     private static final String FIND_ALL_ITEMS     = "SELECT * FROM public.prices;";
     private static final String FIND_PRICE_BY_ITEM = "SELECT price FROM public.items_price where item=?;";
